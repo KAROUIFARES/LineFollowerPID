@@ -98,67 +98,61 @@ void loop() {
   if(binaryButton)
   {
       getBinaryValue();
+      printBinaryValue();
       switch(state)
       {
-        case 0: //ka7la lawla
+        case 0: 
         circulate();
-        if(binaryValue[1]==0  && binaryValue[3]==0 && binaryValue[4]==0 && binaryValue[6]==0)
+        //detecte ka7la lawla , brika lawla
+        if(binaryValue[0]==0  && binaryValue[1]==1 && binaryValue[1]==1 && binaryValue[1]==1 && binaryValue[1]==1 && binaryValue[3]==1 && binaryValue[4]==0 && binaryValue[6]==0)
         {
+          SerialBT.println("ka7la lawla");
           state=1; 
         }
         break;    
         case 1:
-        circulate();
-        SerialBT.println("circulate");
-        if(binaryValue[0]==1 && binaryValue[1]==1 && binaryValue[2]==1 && binaryValue[3]==1 && binaryValue[4]==1 && binaryValue[5]==1 && binaryValue[6]==1 && binaryValue[7]==1)
+        // yfout ka7la lawla ,brika lawla
+        forward();
+        if(binaryValue[0]==0 && binaryValue[1]==0 && binaryValue[2]==1 && binaryValue[3]==1 && binaryValue[4]==1 && binaryValue[5]==1 && binaryValue[6]==0 && binaryValue[7]==0)
         {
           state=2;
         }
         break;
 
-
-        case 2: //ka7la Thenya
-        forward(baseSpeed);
-        SerialBT.println("ka7la thenya");
-        if(binaryValue[0]==0 && binaryValue[1]==0  && binaryValue[3]==1 && binaryValue[4]==1 && binaryValue[6]==0 && binaryValue[7]==0)
+        case 2:
+        circulate();
+        //detecte ka7la thenya brika lawla
+        if(binaryValue[0]==0  && binaryValue[1]==1 && binaryValue[2]==1 && binaryValue[3]==1 && binaryValue[4]==1 && binaryValue[5]==1 && binaryValue[6]==1 && binaryValue[7]==0)
         {
+          SerialBT.println("ka7la thenya");
           state=3;
         }
         break;
         case 3:
-        circulate();
-        SerialBT.println("circulate");
-        if(binaryValue[0]==1 && binaryValue[1]==1 && binaryValue[2]==1 && binaryValue[3]==1 && binaryValue[4]==1 && binaryValue[5]==1 && binaryValue[6]==1 && binaryValue[7]==1)
+        // yfout ka7la thenya brika lawla
+        forward();
+        if(binaryValue[0]==0 && binaryValue[1]==0 && binaryValue[2]==1 && binaryValue[3]==1 && binaryValue[4]==1 && binaryValue[5]==1 && binaryValue[6]==0 && binaryValue[7]==0)
         {
           state=4;
         }
         break;
-
-
-        case 4: //ka7la theltha
-        forward(baseSpeed);
-        SerialBT.println("ka7la theltha");
-        if(binaryValue[0]==0 && binaryValue[1]==0  && binaryValue[3]==1 && binaryValue[4]==1  && binaryValue[6]==0 && binaryValue[7]==0)
+        case 4:
+        circulate();
+         //detecte ka7la theltha brika thenya
+        if(binaryValue[0]==0  && binaryValue[1]==1 && binaryValue[2]==1 && binaryValue[3]==1 && binaryValue[4]==1 && binaryValue[5]==1 && binaryValue[6]==1 && binaryValue[7]==0)
         {
+          SerialBT.println("ka7la theltha");
           state=5;
         }
         break;
-
-
         case 5:
-        circulate();
-        SerialBT.println("circulate");
-        if(binaryValue[0]==1 && binaryValue[1]==1 && binaryValue[2]==1 && binaryValue[3]==1 && binaryValue[4]==1 && binaryValue[5]==1 && binaryValue[6]==1 && binaryValue[7]==1)
+        left();
+        // ydour ysar f ka7la theltha , brika thenya
+        if(binaryValue[0]==0  && binaryValue[1]==0 && binaryValue[2]==1 && binaryValue[3]==1 && binaryValue[4]==1 && binaryValue[5]==1 && binaryValue[6]==0 && binaryValue[7]==0)
         {
-          state=6;
+          state=111;
         }
         break;
-
-        case 6: //ka7la rab3a
-        SerialBT.println("ka7la rab3a");
-        state=111;
-        break;
-
         case 111:
         SerialBT.println("stop");
         stop();
@@ -254,10 +248,6 @@ void run_Motor_Right(int speed) {
   }
 }
 
-
-
-
-
 void circulate() {
   CalculateError();
   PIDCalculator();
@@ -298,21 +288,25 @@ void getButtonValue()
 
 void sharpRight()
 {
-
+  run_Motor_Left(baseSpeed);
+  run_Motor_Right(baseSpeed*(-1));
 }
 
 void sharpLeft()
 {
-
+  run_Motor_Left(baseSpeed*(-1));
+  run_Motor_Right(baseSpeed);
 }
 void right()
 {
-  
+  run_Motor_Left(baseSpeed);
+  run_Motor_Right(0);
 }
 
 void left()
 {
-
+  run_Motor_Left(0);
+  run_Motor_Right(baseSpeed);
 }
 
 
