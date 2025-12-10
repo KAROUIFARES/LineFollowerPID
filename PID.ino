@@ -89,7 +89,6 @@ void setup() {
       (qtr.calibrationOn.maximum[i] + qtr.calibrationOn.minimum[i]) / 2;
   }
   digitalWrite(BlueLed,HIGH);
-  delay(3000);
 }
 
 
@@ -99,30 +98,33 @@ void loop() {
   {
       getBinaryValue();
       printBinaryValue();
-      switch(state)
+      circulate();
+      
+  }
+}
+void Executioncase()
+{
+ switch(state)
       {
         case 0: 
-        circulate();
-        //detecte ka7la lawla , brika lawla
-        if(binaryValue[0]==0  && binaryValue[1]==1 && binaryValue[1]==1 && binaryValue[1]==1 && binaryValue[1]==1 && binaryValue[3]==1 && binaryValue[4]==0 && binaryValue[6]==0)
+        forward();
+        if(binaryValue[0]==0 && binaryValue[7]==0)
         {
-          SerialBT.println("ka7la lawla");
           state=1; 
         }
         break;    
         case 1:
-        // yfout ka7la lawla ,brika lawla
-        forward();
-        if(binaryValue[0]==0 && binaryValue[1]==0 && binaryValue[2]==1 && binaryValue[3]==1 && binaryValue[4]==1 && binaryValue[5]==1 && binaryValue[6]==0 && binaryValue[7]==0)
+        circulate();
+        if(binaryValue[0]==1 && binaryValue[1]==1 && binaryValue[2]==1 && binaryValue[3]==1 && binaryValue[4]==0 && binaryValue[5]==0  && binaryValue[6]==1 && binaryValue[7]==1 )
         {
-          state=2;
+          state=111;
         }
         break;
 
         case 2:
         circulate();
         //detecte ka7la thenya brika lawla
-        if(binaryValue[0]==0  && binaryValue[1]==1 && binaryValue[2]==1 && binaryValue[3]==1 && binaryValue[4]==1 && binaryValue[5]==1 && binaryValue[6]==1 && binaryValue[7]==0)
+        if(binaryValue[1]==1 && binaryValue[6]==1 )
         {
           SerialBT.println("ka7la thenya");
           state=3;
@@ -131,7 +133,7 @@ void loop() {
         case 3:
         // yfout ka7la thenya brika lawla
         forward();
-        if(binaryValue[0]==0 && binaryValue[1]==0 && binaryValue[2]==1 && binaryValue[3]==1 && binaryValue[4]==1 && binaryValue[5]==1 && binaryValue[6]==0 && binaryValue[7]==0)
+        if(binaryValue[1]==1 || binaryValue[6]==1 )
         {
           state=4;
         }
@@ -139,10 +141,10 @@ void loop() {
         case 4:
         circulate();
          //detecte ka7la theltha brika thenya
-        if(binaryValue[0]==0  && binaryValue[1]==1 && binaryValue[2]==1 && binaryValue[3]==1 && binaryValue[4]==1 && binaryValue[5]==1 && binaryValue[6]==1 && binaryValue[7]==0)
+        if(binaryValue[1]==1 && binaryValue[6]==1 )
         {
           SerialBT.println("ka7la theltha");
-          state=5;
+          state=111;
         }
         break;
         case 5:
@@ -161,7 +163,6 @@ void loop() {
         default :
         SerialBT.println();
       }
-  }
 }
 
 void forward(int speed)
@@ -311,33 +312,33 @@ void left()
 
 
 
-// void integrateBluetoothPID() {
+void integrateBluetoothPID() {
 
-//   if (SerialBT.available()) {
-//     String command = SerialBT.readStringUntil('\n');
-//     // Découpe la commande (exemple : "kp 0.26")
-//     int spaceIndex = command.indexOf(' ');
+  if (SerialBT.available()) {
+    String command = SerialBT.readStringUntil('\n');
+    // Découpe la commande (exemple : "kp 0.26")
+    int spaceIndex = command.indexOf(' ');
     
-//     if(spaceIndex > 0){
-//       String paramName = command.substring(0, spaceIndex);
-//       String paramValueString = command.substring(spaceIndex + 1);
+    if(spaceIndex > 0){
+      String paramName = command.substring(0, spaceIndex);
+      String paramValueString = command.substring(spaceIndex + 1);
 
-//       // Conversion string -> float
-//       float valueFloat = paramValueString.toFloat();
+      // Conversion string -> float
+      float valueFloat = paramValueString.toFloat();
 
-//       // Conversion float -> entier
-//       int valueInt = (int)valueFloat;
+      // Conversion float -> entier
+      int valueInt = (int)valueFloat;
 
-//       // Exemple : modifier un PID
-//       if(paramName == "kp") 
-//         Kp= valueInt;
-//       if(paramName =="kd")
-//         Kd=valueInt;
-//       if(paramName=="ki")
-//         Ki=valueInt;
-//     }
-//   }
-// }
+      // Exemple : modifier un PID
+      if(paramName == "kp") 
+        Kp= valueInt;
+      if(paramName =="kd")
+        Kd=valueInt;
+      if(paramName=="ki")
+        Ki=valueInt;
+    }
+  }
+}
 
 
 void printBinaryValue()
